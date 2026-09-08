@@ -1,5 +1,6 @@
 package com.example.local.service;
 
+import com.example.local.dto.ProductRequestDTO;
 import com.example.local.dto.ProductResponseDTO;
 import com.example.local.exception.ProductAlreadyExistsException;
 import com.example.local.model.Product;
@@ -17,7 +18,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponseDTO addProduct(Product product) {
+    public ProductResponseDTO addProduct(ProductRequestDTO request) {
+        Product product = new Product(
+                request.getName(),
+                request.isAvailable()
+        );
 
         if (productRepository.existsByNameIgnoreCase(product.getName())) {
             throw new ProductAlreadyExistsException("Product already exists");

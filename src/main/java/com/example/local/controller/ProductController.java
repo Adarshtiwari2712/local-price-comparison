@@ -1,7 +1,7 @@
 package com.example.local.controller;
 
+import com.example.local.dto.ProductRequestDTO;
 import com.example.local.dto.ProductResponseDTO;
-import com.example.local.model.Product;
 import com.example.local.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +19,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ProductResponseDTO addProduct(@Valid @RequestBody Product product) {
-        return productService.addProduct(product);
+    public ProductResponseDTO addProduct(@Valid @RequestBody ProductRequestDTO request) {
+        return productService.addProduct(request);
     }
 
     @GetMapping

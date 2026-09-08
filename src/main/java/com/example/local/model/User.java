@@ -10,7 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "users")
 public class User {
 
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 

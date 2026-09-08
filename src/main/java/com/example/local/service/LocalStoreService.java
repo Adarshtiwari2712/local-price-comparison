@@ -1,5 +1,6 @@
 package com.example.local.service;
 
+import com.example.local.dto.LocalStoreRequestDTO;
 import com.example.local.model.LocalStore;
 import com.example.local.repository.LocalStoreRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,12 @@ public class LocalStoreService {
         this.localStoreRepository = localStoreRepository;
     }
 
-    public LocalStoreResponseDTO addStore(LocalStore store) {
+    public LocalStoreResponseDTO addStore(LocalStoreRequestDTO request) {
+        LocalStore store = new LocalStore(
+                request.getName(),
+                request.getAddress(),
+                request.getPhone()
+        );
 
         LocalStore savedStore = localStoreRepository.save(store);
 

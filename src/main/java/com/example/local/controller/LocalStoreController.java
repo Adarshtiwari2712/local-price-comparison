@@ -1,7 +1,7 @@
 package com.example.local.controller;
 
+import com.example.local.dto.LocalStoreRequestDTO;
 import com.example.local.dto.LocalStoreResponseDTO;
-import com.example.local.model.LocalStore;
 import com.example.local.service.LocalStoreService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -18,8 +18,8 @@ public class LocalStoreController {
     }
 
     @PostMapping
-    public LocalStoreResponseDTO addStore(@Valid @RequestBody LocalStore store){
-        return localStoreService.addStore(store);
+    public LocalStoreResponseDTO addStore(@Valid @RequestBody LocalStoreRequestDTO request){
+        return localStoreService.addStore(request);
     }
 
     @GetMapping
