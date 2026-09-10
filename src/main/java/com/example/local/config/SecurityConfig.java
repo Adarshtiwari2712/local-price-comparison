@@ -3,6 +3,7 @@ package com.example.local.config;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,12 +40,24 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+
+                        // Shopkeeper only operations
                         .requestMatchers(
                                 org.springframework.http.HttpMethod.POST,
                                 "/products",
                                 "/stores",
                                 "/prices"
                         ).hasRole("SHOPKEEPER")
+
+                        // Public user operations
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/products",
+                                "/products/search",
+                                "/prices",
+                                "/prices/compare/name",
+                                "/stores"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )
