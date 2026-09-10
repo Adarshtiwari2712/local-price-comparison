@@ -39,15 +39,31 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.POST,
+                                "/products",
+                                "/stores",
+                                "/prices"
+                        ).hasRole("SHOPKEEPER")
+
                         .anyRequest().authenticated()
                 )
 
                 .exceptionHandling(exception -> exception
+
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
                             response.getWriter().write(
                                     "{\"error\":\"Authentication required\"}"
+                            );
+                        })
+
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"error\":\"Access denied\"}"
                             );
                         })
                 )
