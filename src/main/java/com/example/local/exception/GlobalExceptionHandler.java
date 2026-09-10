@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import com.example.local.exception.EmailAlreadyExistsException;
-import com.example.local.exception.InvalidCredentialsException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -32,11 +30,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoPricesAvailableException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNoPricesAvailable(NoPricesAvailableException ex) {
-        return ex.getMessage();
-    }
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
         return ex.getMessage();
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
