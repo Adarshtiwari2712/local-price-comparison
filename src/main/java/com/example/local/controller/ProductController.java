@@ -32,4 +32,10 @@ public class ProductController {
     public ProductResponseDTO searchProduct(@RequestParam String name) {
         return productService.searchProduct(name);
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id){
+        productService.deleteProduct(id);
+        return "Product deleted successfully";
+    }
 }

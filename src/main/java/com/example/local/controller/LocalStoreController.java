@@ -26,6 +26,11 @@ public class LocalStoreController {
     public List<LocalStoreResponseDTO> getAllStores(){
         return localStoreService.getAllStores();
     }
+    @DeleteMapping("/{id}")
+    public String deleteStore(@PathVariable Long id) {
+        localStoreService.deleteStore(id);
+        return "Store deleted successfully";
+    }
 
 }
 

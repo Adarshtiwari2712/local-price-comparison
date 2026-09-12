@@ -49,6 +49,13 @@ public class SecurityConfig {
                                 "/prices"
                         ).hasRole("SHOPKEEPER")
 
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/products/**",
+                                "/prices/**",
+                                "/stores/**"
+                        ).hasRole("SHOPKEEPER")
+
                         // Public user operations
                         .requestMatchers(
                                 org.springframework.http.HttpMethod.GET,

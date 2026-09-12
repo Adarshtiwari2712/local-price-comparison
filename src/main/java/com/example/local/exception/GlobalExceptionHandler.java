@@ -45,4 +45,27 @@ public class GlobalExceptionHandler {
     public String handleInvalidCredentials(InvalidCredentialsException ex){
         return ex.getMessage();
     }
+
+@ExceptionHandler(StoreAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleStoreAlreadyExists(StoreAlreadyExistsException ex){
+        return ex.getMessage();
+}
+    @ExceptionHandler(PriceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handlePriceNotFound(PriceNotFoundException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(ProductHasPricesException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleProductHasPrices(ProductHasPricesException ex){
+        return ex.getMessage();
+    }
+    @ExceptionHandler(StoreHasPricesException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleStoreHasPrices(StoreHasPricesException ex){
+        return ex.getMessage();
+
+    }
 }

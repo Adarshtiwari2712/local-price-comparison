@@ -46,4 +46,10 @@ public class PriceController {
     public PriceComparisonDTO comparePricesByName(@RequestParam String name) {
         return priceService.comparePricesByName(name);
     }
+
+    @DeleteMapping("/{id}")
+    public String deletePrice(@PathVariable Long id){
+        priceService.deletePrice(id);
+        return "Price deleted successfully";
+    }
 }
