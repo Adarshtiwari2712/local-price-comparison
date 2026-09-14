@@ -39,7 +39,10 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html/",
+                                "/v3/api-docs/**").permitAll()
 
                         // Shopkeeper only operations
                         .requestMatchers(

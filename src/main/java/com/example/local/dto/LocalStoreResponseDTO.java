@@ -1,10 +1,31 @@
 package com.example.local.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class LocalStoreResponseDTO {
 
+    @Schema(
+            description = "Unique ID of the store",
+            example = "15"
+    )
     private Long id;
+
+    @Schema(
+            description = "Name of the local store",
+            example = "Gupta Store"
+    )
     private String name;
+
+    @Schema(
+            description = "Address of the local store",
+            example = "Main Market, Agra"
+    )
     private String address;
+
+    @Schema(
+            description = "10-digit phone number of the store",
+            example = "9876543210"
+    )
     private String phone;
 
     public LocalStoreResponseDTO() {

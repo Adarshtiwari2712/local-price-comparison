@@ -1,17 +1,48 @@
 package com.example.local.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class AuthResponseDTO {
 
+    @Schema(
+            description = "Unique ID of the shopkeeper",
+            example = "2"
+    )
     private Long id;
+
+    @Schema(
+            description = "Name of the shopkeeper",
+            example = "Adarsh"
+    )
     private String name;
+
+    @Schema(
+            description = "Email address of the shopkeeper",
+            example = "shopkeeper@gmail.com"
+    )
     private String email;
+
+    @Schema(
+            description = "Role assigned to the authenticated user",
+            example = "SHOPKEEPER"
+    )
     private String role;
+
+    @Schema(
+            description = "JWT token used to access protected APIs",
+            example = "eyJhbGciOiJIUzI1NiJ9..."
+    )
     private String token;
 
-    public AuthResponseDTO(){
+    public AuthResponseDTO() {
     }
 
-    public AuthResponseDTO(Long id, String name, String email, String role,String token){
+    public AuthResponseDTO(
+            Long id,
+            String name,
+            String email,
+            String role,
+            String token) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -50,11 +81,12 @@ public class AuthResponseDTO {
     public void setRole(String role) {
         this.role = role;
     }
-    public String getToken(){
+
+    public String getToken() {
         return token;
     }
-    public void setToken(String token){
+
+    public void setToken(String token) {
         this.token = token;
     }
-
 }

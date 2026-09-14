@@ -1,12 +1,43 @@
 package com.example.local.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class PriceResponseDTO {
 
+    @Schema(
+            description = "Unique ID of the price record",
+            example = "25"
+    )
     private Long id;
+
+    @Schema(
+            description = "Price amount of the product",
+            example = "50.0"
+    )
     private double amount;
+
+    @Schema(
+            description = "ID of the product",
+            example = "7"
+    )
     private Long productId;
+
+    @Schema(
+            description = "Name of the product",
+            example = "Milk"
+    )
     private String productName;
+
+    @Schema(
+            description = "ID of the store",
+            example = "15"
+    )
     private Long storeId;
+
+    @Schema(
+            description = "Name of the store",
+            example = "Gupta Store"
+    )
     private String storeName;
 
     public PriceResponseDTO() {
