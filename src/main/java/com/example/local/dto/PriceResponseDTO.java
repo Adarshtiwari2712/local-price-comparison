@@ -17,6 +17,12 @@ public class PriceResponseDTO {
     private double amount;
 
     @Schema(
+            description = "Whether the product is currently available in the store ",
+            example = "true"
+    )
+    private boolean available;
+
+    @Schema(
             description = "ID of the product",
             example = "7"
     )
@@ -46,6 +52,7 @@ public class PriceResponseDTO {
     public PriceResponseDTO(
             Long id,
             double amount,
+            boolean available,
             Long productId,
             String productName,
             Long storeId,
@@ -57,6 +64,7 @@ public class PriceResponseDTO {
         this.productName = productName;
         this.storeId = storeId;
         this.storeName = storeName;
+        this.available = available;
     }
 
     public Long getId() {
@@ -105,5 +113,13 @@ public class PriceResponseDTO {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

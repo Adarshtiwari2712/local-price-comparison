@@ -2,6 +2,7 @@ package com.example.local.service;
 
 import com.example.local.dto.LocalStoreRequestDTO;
 import com.example.local.dto.LocalStoreResponseDTO;
+import com.example.local.dto.UpdateStoreRequestDTO;
 import com.example.local.exception.InvalidCredentialsException;
 import com.example.local.exception.StoreAlreadyExistsException;
 import com.example.local.model.LocalStore;
@@ -84,6 +85,32 @@ public class LocalStoreService {
                 ))
                 .toList();
     }
+
+    public LocalStoreResponseDTO getMyStore(){
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new InvalidCredentialsException(
+                                "Shopkeeper not found"
+                        ));
+        LocalStore store = localStoreRepository.findByOwner(owner)
+                .orElseThrow(()->
+                        new StoreNotFoundException(
+                                "Shopkeeper does not have a store"
+                        ));
+
+        return new LocalStoreResponseDTO(
+                store.getId(),
+                store.getName(),
+                store.getAddress(),
+                store.getPhone()
+        );
+    }
     public void deleteStore(Long storeId) {
 
         LocalStore store = localStoreRepository.findById(storeId)
@@ -117,5 +144,29 @@ public class LocalStoreService {
         }
 
         localStoreRepository.delete(store);
+    }
+
+    public LocalStore updateStore(Long storeId, UpdateStoreRequestDTO request){
+        LocalStore store = localStoreRepository.findById(storeId)
+                .orElseThrow(()->
+                        new StoreNotFoundException("Store not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(()->
+                        new InvalidCredentialsException("Shopkeeper not found"));
+        if(!store.getOwner().getId().equals(owner.getId())){
+            throw new AccessDeniedException(
+                    "You can only update your own store"
+            );
+        }
+        store.setName(request.getName());
+        store.setAddress(request.getAddress());
+        store.setPhone(request.getPhone());
+
+        return localStoreRepository.save(store);
+
     }
 }

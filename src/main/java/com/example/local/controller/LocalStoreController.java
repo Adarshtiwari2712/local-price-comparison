@@ -2,6 +2,8 @@ package com.example.local.controller;
 
 import com.example.local.dto.LocalStoreRequestDTO;
 import com.example.local.dto.LocalStoreResponseDTO;
+import com.example.local.dto.UpdateStoreRequestDTO;
+import com.example.local.model.LocalStore;
 import com.example.local.service.LocalStoreService;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -41,6 +43,21 @@ public class LocalStoreController {
     public LocalStoreResponseDTO addStore(@Valid @RequestBody LocalStoreRequestDTO request){
         return localStoreService.addStore(request);
     }
+
+    @Operation(
+            summary = "Get my store",
+            description = "Returns the belonging to the authenticated shopkeeper"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Store retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Authentication required"),
+            @ApiResponse(responseCode = "404", description = "Shopkeeper does not have a store")
+    })
+    @GetMapping("/my-store")
+    @SecurityRequirement(name = "bearerAuth")
+    public LocalStoreResponseDTO getMyStore(){
+        return localStoreService.getMyStore();
+    }
     @Operation(
             summary = "Get all local stores",
             description = "Returns a list of all local stores registered in the system"
@@ -69,6 +86,30 @@ public class LocalStoreController {
         localStoreService.deleteStore(id);
         return "Store deleted successfully";
     }
+@Operation(
+        summary = "Update my store",
+        description = "Updates the name, address and phone of the authenticated shopkeeper's store"
+)
+@ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Store updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid store data"),
+        @ApiResponse(responseCode = "401", description = "Authentication required"),
+        @ApiResponse(responseCode = "403", description = "Access denied"),
+        @ApiResponse(responseCode = "404", description = "Store not found")
+})
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    public LocalStoreResponseDTO updateStore(
+        @PathVariable Long id,
+        @Valid @RequestBody UpdateStoreRequestDTO request ){
+    LocalStore store = localStoreService.updateStore(id, request);
 
+    return new LocalStoreResponseDTO(
+            store.getId(),
+            store.getName(),
+            store.getAddress(),
+            store.getPhone()
+    );
+}
 }
 

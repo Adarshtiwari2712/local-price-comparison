@@ -3,6 +3,7 @@ package com.example.local.service;
 import com.example.local.dto.PriceComparisonDTO;
 import com.example.local.dto.PriceRequestDTO;
 import com.example.local.dto.PriceResponseDTO;
+import com.example.local.dto.UpdatePriceRequestDTO;
 import com.example.local.exception.InvalidCredentialsException;
 import com.example.local.exception.NoPricesAvailableException;
 import com.example.local.exception.ProductNotFoundException;
@@ -43,7 +44,7 @@ public class PriceService {
     }
 
     // Add a new price
-    public Price addPrice(PriceRequestDTO request) throws AccessDeniedException {
+    public Price addPrice(PriceRequestDTO request) {
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() ->
@@ -71,7 +72,7 @@ public class PriceService {
                                 "Shopkeeper does not have a store"
                         ));
 
-        if(!ownerStore.getId().equals(store.getId())){
+        if (!ownerStore.getId().equals(store.getId())) {
             throw new AccessDeniedException(
                     "You can only manage prices for your own store"
             );
@@ -84,6 +85,7 @@ public class PriceService {
         price.setAmount(request.getAmount());
         price.setProduct(product);
         price.setStore(store);
+        price.setAvailable(request.isAvailable());
 
         return priceRepository.save(price);
     }
@@ -106,6 +108,7 @@ public class PriceService {
                 .map(price -> new PriceResponseDTO(
                         price.getId(),
                         price.getAmount(),
+                        price.isAvailable(),
                         price.getProduct().getId(),
                         price.getProduct().getName(),
                         price.getStore().getId(),
@@ -114,9 +117,13 @@ public class PriceService {
                 .toList();
 
         Price cheapest = prices.stream()
+                .filter(Price::isAvailable)
                 .min((p1, p2) ->
                         Double.compare(p1.getAmount(), p2.getAmount()))
-                .orElseThrow();
+                .orElseThrow(() ->
+                        new NoPricesAvailableException(
+                                "Product is currently unavailable in all stores"
+                        ));
 
         return new PriceComparisonDTO(
                 product.getName(),
@@ -142,6 +149,7 @@ public class PriceService {
                 .map(price -> new PriceResponseDTO(
                         price.getId(),
                         price.getAmount(),
+                        price.isAvailable(),
                         price.getProduct().getId(),
                         price.getProduct().getName(),
                         price.getStore().getId(),
@@ -149,9 +157,10 @@ public class PriceService {
                 ))
                 .toList();
     }
-    public void deletePrice(Long priceId){
+
+    public void deletePrice(Long priceId) {
         Price price = priceRepository.findById(priceId)
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new PriceNotFoundException(
                                 "Price not found"
                         ));
@@ -162,18 +171,18 @@ public class PriceService {
         String email = authentication.getName();
 
         User owner = userRepository.findByEmail(email)
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new InvalidCredentialsException(
                                 "Shopkeeper not found"
                         ));
 
         LocalStore ownerStore = localStoreRepository.findByOwner(owner)
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new StoreNotFoundException(
                                 "Shopkeeper does not have a store"
                         ));
 
-        if(!ownerStore.getId().equals(price.getStore().getId())){
+        if (!ownerStore.getId().equals(price.getStore().getId())) {
             throw new AccessDeniedException(
                     "You can delete prices from your own store"
             );
@@ -181,4 +190,66 @@ public class PriceService {
         }
         priceRepository.delete(price);
     }
+
+    public List<PriceResponseDTO> getMyStorePrices() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new InvalidCredentialsException(
+                                "Shopkeeper not found"
+                        ));
+        LocalStore store = localStoreRepository.findByOwner(owner)
+                .orElseThrow(() ->
+                        new StoreNotFoundException(
+                                "Shopkeeper does not have a store"
+                        ));
+
+        List<Price> prices = priceRepository.findByStore(store);
+
+        return prices.stream()
+                .map(price -> new PriceResponseDTO(
+                        price.getId(),
+                        price.getAmount(),
+                        price.isAvailable(),
+                        price.getProduct().getId(),
+                        price.getProduct().getName(),
+                        price.getStore().getId(),
+                        price.getStore().getName()
+                ))
+                .toList();
+    }
+
+    public Price updatePrice(Long priceId, UpdatePriceRequestDTO request) {
+        Price price = priceRepository.findById(priceId)
+                .orElseThrow(() ->
+                        new PriceNotFoundException("Price not found"));
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new InvalidCredentialsException("Shopkeeper not found"));
+
+        LocalStore ownerStore = localStoreRepository.findByOwner(owner)
+                .orElseThrow(() ->
+                        new StoreNotFoundException(
+                                "Shopkeeper does not have a store"
+                        ));
+        if (!price.getStore().getId().equals(ownerStore.getId())) {
+            throw new AccessDeniedException(
+                    "You can only update prices for your own store"
+            );
+        }
+
+        price.setAmount(request.getAmount());
+        price.setAvailable(request.isAvailable());
+
+        return priceRepository.save(price);
+    }
+
 }

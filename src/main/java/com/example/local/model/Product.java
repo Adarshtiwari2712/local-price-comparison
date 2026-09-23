@@ -21,7 +21,7 @@ public class Product {
 
 
 
-    private boolean available;
+
 
     @OneToMany(mappedBy = "product")
     private  List<Price> prices = new ArrayList<>();
@@ -29,9 +29,8 @@ public class Product {
     private Product() {
     }
 
-    public Product(String name, boolean available) {
+    public Product(String name) {
         this.name = name;
-        this.available = available;
     }
 
     public Long getId() {
@@ -59,13 +58,7 @@ public class Product {
     }
 
 
-    public boolean isAvailable() {
-        return available;
-    }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 
 }
 

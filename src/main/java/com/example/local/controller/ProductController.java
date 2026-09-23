@@ -2,6 +2,8 @@ package com.example.local.controller;
 
 import com.example.local.dto.ProductRequestDTO;
 import com.example.local.dto.ProductResponseDTO;
+import com.example.local.dto.UpdateProductRequestDTO;
+import com.example.local.model.Product;
 import com.example.local.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.example.local.dto.MyStoreProductResponseDTO;
 
 import java.util.List;
 
@@ -81,5 +84,60 @@ public class ProductController {
     public String deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return "Product deleted successfully";
+    }
+
+    @Operation(
+            summary = "Update a product price",
+            description = "Updates the price and availability of a product in the authenticated shopkeeper's own store"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Price updated successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid price data"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication required"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Access denied"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Price not found"
+            )
+    })
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    public ProductResponseDTO updateProductName(
+            @PathVariable Long id,
+           @Valid @RequestBody UpdateProductRequestDTO request){
+         Product product = productService.updateProductName(id, request);
+
+         return new ProductResponseDTO(
+                 product.getId(),
+                 product.getName()
+         );
+
+
+    }
+    @Operation(
+            summary = "Get my store products",
+            description = "Returns all products available in the authenticated shopkeeper's store"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Products retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Authentication required"),
+            @ApiResponse(responseCode = "404", description = "Shopkeeper does not have a store")
+    })
+    @GetMapping("/my-store")
+    @SecurityRequirement(name = "bearerAuth")
+    public List<MyStoreProductResponseDTO> getMyStoreProducts() {
+        return productService.getMyStoreProducts();
     }
 }

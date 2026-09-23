@@ -10,6 +10,7 @@ public class Price {
      private Long id;
 
      private double amount;
+     private boolean available;
 
      @ManyToOne
      @JoinColumn(name = "product_id")
@@ -54,4 +55,12 @@ public class Price {
      public void setAmount(double amount){
          this.amount = amount;
      }
-}
+
+     public boolean isAvailable() {
+         return available;
+     }
+
+     public void setAvailable(boolean available) {
+         this.available = available;
+     }
+ }

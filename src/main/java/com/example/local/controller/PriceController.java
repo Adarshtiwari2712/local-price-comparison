@@ -2,6 +2,7 @@ package com.example.local.controller;
 
 import com.example.local.dto.PriceRequestDTO;
 import com.example.local.dto.PriceResponseDTO;
+import com.example.local.dto.UpdatePriceRequestDTO;
 import com.example.local.model.Price;
 import com.example.local.service.PriceService;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class PriceController {
     public PriceController(PriceService priceService) {
         this.priceService = priceService;
     }
+
     @Operation(
             summary = "Add or update a product price",
             description = "Adds a new price or updates the existing price for a product in a shopkeeper's own store"
@@ -38,21 +40,22 @@ public class PriceController {
             @ApiResponse(responseCode = "403", description = "Access denied"),
             @ApiResponse(responseCode = "404", description = "Product or store not found")
     })
-    // Add a new price
     @PostMapping
     @SecurityRequirement(name = "bearerAuth")
-    public PriceResponseDTO addPrice( @Valid @RequestBody PriceRequestDTO request) {
+    public PriceResponseDTO addPrice(@Valid @RequestBody PriceRequestDTO request) {
         Price price = priceService.addPrice(request);
 
         return new PriceResponseDTO(
                 price.getId(),
                 price.getAmount(),
+                price.isAvailable(),
                 price.getProduct().getId(),
                 price.getProduct().getName(),
                 price.getStore().getId(),
                 price.getStore().getName()
         );
     }
+
     @Operation(
             summary = "Get all prices",
             description = "Returns all product prices from local stores"
@@ -60,10 +63,25 @@ public class PriceController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Prices retrieved successfully")
     })
-    // Get all prices
     @GetMapping
     public List<PriceResponseDTO> getAllPrices() {
         return priceService.getAllPrices();
+    }
+
+    // Get prices of authenticated shopkeeper's store
+    @Operation(
+            summary = "Get my store prices",
+            description = "Returns all prices managed by the authenticated shopkeeper"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Prices retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Authentication required"),
+            @ApiResponse(responseCode = "404", description = "Shopkeeper does not have a store")
+    })
+    @GetMapping("/my-store")
+    @SecurityRequirement(name = "bearerAuth")
+    public List<PriceResponseDTO> getMyStorePrices() {
+        return priceService.getMyStorePrices();
     }
 
     @Operation(
@@ -74,11 +92,11 @@ public class PriceController {
             @ApiResponse(responseCode = "200", description = "Price comparison retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "No prices available for the requested product")
     })
-    // compare prices and find the cheapest store
     @GetMapping("/compare/name")
     public PriceComparisonDTO comparePricesByName(@RequestParam String name) {
         return priceService.comparePricesByName(name);
     }
+
     @Operation(
             summary = "Delete a price",
             description = "Deletes a price only if it belongs to the authenticated shopkeeper's own store"
@@ -91,8 +109,31 @@ public class PriceController {
     })
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "bearerAuth")
-    public String deletePrice(@PathVariable Long id){
+    public String deletePrice(@PathVariable Long id) {
         priceService.deletePrice(id);
         return "Price deleted successfully";
     }
+
+
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
+    public PriceResponseDTO updatePrice(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdatePriceRequestDTO request){
+
+        Price price = priceService.updatePrice(id,request);
+
+       return new PriceResponseDTO(
+               price.getId(),
+               price.getAmount(),
+               price.isAvailable(),
+               price.getProduct().getId(),
+               price.getProduct().getName(),
+               price.getStore().getId(),
+               price.getStore().getName()
+       ) ;
+    }
+
 }
+
+

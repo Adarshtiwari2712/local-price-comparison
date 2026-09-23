@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface PriceRepository  extends JpaRepository<Price, Long>{
     Optional<Price> findByProductAndStore(Product product, LocalStore store);
-
+    List<Price> findByStore(LocalStore store);
     List<Price> findByProduct(Product product);
     boolean existsByProduct(Product product);
     boolean existsByStore(LocalStore store);

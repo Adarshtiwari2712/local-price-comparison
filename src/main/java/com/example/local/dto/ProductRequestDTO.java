@@ -12,13 +12,9 @@ public class ProductRequestDTO {
     @NotBlank(message = "Product name is required")
     private String name;
 
-    @Schema(
-            description = "Indicates whether the product is currently available",
-            example = "true"
-    )
-    private boolean available;
 
-    public ProductRequestDTO() {}
+    public ProductRequestDTO() {
+    }
 
     public String getName() {
         return name;
@@ -28,12 +24,5 @@ public class ProductRequestDTO {
         this.name = name;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 }
 

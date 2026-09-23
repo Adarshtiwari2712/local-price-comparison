@@ -16,19 +16,14 @@ public class ProductResponseDTO {
     )
     private String name;
 
-    @Schema(
-            description = "Indicates whether the product is currently available",
-            example = "true"
-    )
-    private boolean available;
 
     public ProductResponseDTO() {
     }
 
-    public ProductResponseDTO(Long id, String name, boolean available) {
+    public ProductResponseDTO(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.available = available;
+
     }
 
     public Long getId() {
@@ -47,11 +42,5 @@ public class ProductResponseDTO {
         this.name = name;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 }

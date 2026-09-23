@@ -13,6 +13,11 @@ public class PriceRequestDTO {
     @Positive(message = "Price must be greater than 0")
     private double amount;
     @Schema(
+            description = "Whether the product is currently available in the store",
+            example = "true"
+    )
+    private boolean available;
+    @Schema(
             description = "ID of the product for which the price is being added",
             example = "7"
     )
@@ -46,4 +51,11 @@ public class PriceRequestDTO {
         this.storeId = storeId;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 }

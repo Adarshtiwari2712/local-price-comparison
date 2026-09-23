@@ -39,18 +39,25 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login",
+                        .requestMatchers(
+                                "/auth/login",
+                                "/auth/register",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html/",
-                                "/v3/api-docs/**").permitAll()
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
                         // Shopkeeper only operations
                         .requestMatchers(
-                                org.springframework.http.HttpMethod.POST,
+                                HttpMethod.POST,
                                 "/products",
                                 "/stores",
                                 "/prices"
                         ).hasRole("SHOPKEEPER")
+
+
+                        .requestMatchers(
+                                HttpMethod.PUT,"/products/**","/stores/**","/prices/**").hasRole("SHOPKEEPER")
 
                         .requestMatchers(
                                 HttpMethod.DELETE,
@@ -60,8 +67,9 @@ public class SecurityConfig {
                         ).hasRole("SHOPKEEPER")
 
                         // Public user operations
-                        .requestMatchers(
-                                org.springframework.http.HttpMethod.GET,
+                        .requestMatchers
+                                (
+                                HttpMethod.GET,
                                 "/products",
                                 "/products/search",
                                 "/prices",

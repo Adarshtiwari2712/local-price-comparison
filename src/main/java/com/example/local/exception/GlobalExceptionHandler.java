@@ -68,4 +68,9 @@ public class GlobalExceptionHandler {
         return ex.getMessage();
 
     }
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleEmailAlreadyExists(EmailAlreadyExistsException ex){
+        return ex.getMessage();
+    }
 }
