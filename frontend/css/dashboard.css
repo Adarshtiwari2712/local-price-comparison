@@ -1,0 +1,423 @@
+/* =========================
+   GENERAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
+
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.dashboard-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.dashboard-header {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: #666;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout-btn {
+    width: auto;
+    padding: 10px 20px;
+
+    background: #dc3545;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #b02a37;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.stat-card {
+    background: white;
+
+    padding: 25px;
+    border-radius: 12px;
+
+    text-align: center;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+.stat-card p {
+    margin: 0;
+
+    font-size: 32px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.menu-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.menu-container button {
+    padding: 14px;
+
+    background: #1976d2;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.menu-container button:hover {
+    background: #125ca5;
+}
+
+
+/* =========================
+   DASHBOARD PANELS
+========================= */
+
+.dashboard-panel {
+    display: none;
+
+    background: white;
+
+    margin-top: 25px;
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-panel h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-weight: bold;
+    color: #444;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 7px;
+
+    font-size: 15px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #1976d2;
+}
+
+
+/* =========================
+   PANEL BUTTON
+========================= */
+
+.dashboard-panel > button {
+    padding: 12px 20px;
+
+    background: #1976d2;
+    color: white;
+
+    border: none;
+    border-radius: 7px;
+
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.dashboard-panel > button:hover {
+    background: #125ca5;
+}
+
+
+/* =========================
+   STORE DETAILS
+========================= */
+
+.store-details {
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: #f7f9fc;
+
+    border-radius: 8px;
+
+    border: 1px solid #ddd;
+}
+
+.store-details h3 {
+    margin-top: 0;
+}
+
+.store-details p {
+    margin: 10px 0;
+}
+
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+    background: #f8f9fa;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.product-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.product-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+
+/* =========================
+   PRODUCT ACTIONS
+========================= */
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.product-actions button,
+.price-actions button {
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #1976d2;
+    color: white;
+
+    cursor: pointer;
+}
+
+.product-actions button:hover,
+.price-actions button:hover {
+    background: #125ca5;
+}
+
+
+/* =========================
+   PRICE CARD
+========================= */
+
+.price-card {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+    background: #f8f9fa;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.price-info h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.price-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+
+/* =========================
+   PRICE ACTIONS
+========================= */
+
+.price-actions {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* =========================
+   DELETE BUTTON
+========================= */
+
+.delete-btn {
+    background: #dc3545 !important;
+}
+
+.delete-btn:hover {
+    background: #b02a37 !important;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #777;
+
+    background: #f8f9fa;
+
+    border-radius: 8px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .dashboard-container {
+        width: 94%;
+        margin: 15px auto;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .menu-container {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card,
+    .price-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .product-actions,
+    .price-actions {
+        width: 100%;
+    }
+
+    .product-actions button,
+    .price-actions button {
+        flex: 1;
+    }
+}

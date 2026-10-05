@@ -1,0 +1,441 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+body {
+    font-family: Arial, sans-serif;
+
+    background:
+            radial-gradient(
+                    circle at 10% 10%,
+                    #e0f2fe,
+                    transparent 30%
+            ),
+            radial-gradient(
+                    circle at 90% 80%,
+                    #dcfce7,
+                    transparent 30%
+            ),
+            #f8fbff;
+
+    color: #172554;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.auth-page {
+    min-height: 100vh;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.auth-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 22px 50px;
+
+    background: rgba(255, 255, 255, 0.75);
+
+    border-bottom: 1px solid #dbeafe;
+
+    backdrop-filter: blur(10px);
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    color: #172554;
+}
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-button {
+    padding: 10px 18px;
+
+    border: 1px solid #93c5fd;
+    border-radius: 9px;
+
+    background: white;
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
+}
+
+.back-button:hover {
+    background: #eff6ff;
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.auth-main {
+    min-height: calc(100vh - 75px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px 20px;
+}
+
+
+/* =========================
+   AUTH CARD
+========================= */
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 40px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 20px;
+
+    box-shadow:
+            0 20px 50px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================
+   ICON
+========================= */
+
+.auth-icon {
+    width: 75px;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    font-size: 38px;
+}
+
+
+/* =========================
+   HEADING
+========================= */
+
+.auth-card h1 {
+    text-align: center;
+
+    font-size: 30px;
+
+    color: #172554;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   SUBTITLE
+========================= */
+
+.auth-subtitle {
+    text-align: center;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+
+    color: #64748b;
+
+    margin-bottom: 30px;
+}
+
+
+/* =========================
+   FORM GROUP
+========================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   LABEL
+========================= */
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #334155;
+}
+
+
+/* =========================
+   INPUT + TEXTAREA
+========================= */
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #172554;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+
+/* =========================
+   INPUT FOCUS
+========================= */
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+            0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================
+   SMALL TEXT
+========================= */
+
+.form-group small {
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.primary-btn {
+    width: 100%;
+
+    padding: 14px 20px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 8px 20px rgba(37, 99, 235, 0.20);
+
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+
+.primary-btn:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 11px 25px rgba(37, 99, 235, 0.28);
+}
+
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.form-message {
+    margin-top: 15px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.auth-footer {
+    margin-top: 25px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    color: #64748b;
+}
+
+
+.auth-footer a {
+    color: #2563eb;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .auth-header {
+        padding: 18px 20px;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+
+    .auth-main {
+        padding: 30px 15px;
+    }
+
+    .auth-card {
+        padding: 30px 22px;
+
+        border-radius: 16px;
+    }
+
+    .auth-card h1 {
+        font-size: 25px;
+    }
+
+    .auth-subtitle {
+        font-size: 14px;
+    }
+
+    .back-button {
+        padding: 8px 13px;
+    }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 400px) {
+
+    .logo span {
+        display: none;
+    }
+
+    .auth-card {
+        padding: 25px 18px;
+    }
+
+    .auth-card h1 {
+        font-size: 23px;
+    }
+
+}

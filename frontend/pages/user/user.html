@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>User - Local Price Compare</title>
+
+    <link rel="stylesheet" href="../../css/user.css">
+
+</head>
+
+<body>
+
+<div class="user-page">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="user-header">
+
+        <div class="logo">
+            🏪
+            <span>Local Price Compare</span>
+        </div>
+
+        <button class="back-button" id="backButton">
+            ← Back
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="user-main">
+
+
+        <!-- =========================
+             WELCOME
+        ========================== -->
+
+        <section class="user-welcome">
+
+            <div class="badge">
+                🌿 Support Local Businesses
+            </div>
+
+            <h1>
+                Find the Best Local Price
+            </h1>
+
+            <p>
+                Search for a product and compare prices
+                from local shops.
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             SEARCH
+        ========================== -->
+
+        <section class="search-section">
+
+            <div class="search-box">
+
+                <input
+                        type="text"
+                        id="productSearch"
+                        placeholder="Search for a product..."
+                >
+
+                <button id="searchButton">
+                    🔍 Search
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SEARCH RESULT
+        ========================== -->
+
+        <section class="results-section">
+
+            <div class="section-header">
+
+                <h2>
+                    Price Comparison
+                </h2>
+
+                <span id="resultCount">
+                    0 shops
+                </span>
+
+            </div>
+
+
+            <!-- Results will be inserted here by JavaScript -->
+
+            <div id="priceResults" class="price-results">
+
+                <!-- Example empty state -->
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🔎
+                    </div>
+
+                    <h3>
+                        Search for a product
+                    </h3>
+
+                    <p>
+                        Enter a product name above to
+                        compare prices from local shops.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/user.js"></script>
+</div>
+</body>
+
+</html>

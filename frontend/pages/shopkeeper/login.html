@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shopkeeper Login - Local Price Compare</title>
+
+    <link rel="stylesheet" href="../../css/auth.css">
+
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="auth-header">
+
+        <div class="logo">
+            🏪
+            <span>Local Price Compare</span>
+        </div>
+
+        <button class="back-button" id="backButton">
+            ← Back
+        </button>
+
+    </header>
+
+
+    <!-- ================= LOGIN ================= -->
+
+    <main class="auth-main">
+
+        <div class="auth-card">
+
+            <div class="auth-icon">
+                🔐
+            </div>
+
+            <h1>
+                Shopkeeper Login
+            </h1>
+
+            <p class="auth-subtitle">
+                Login to manage your store, products
+                and prices.
+            </p>
+
+
+            <!-- ================= FORM ================= -->
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                        type="submit"
+                        class="primary-btn"
+                        id="loginButton"
+                >
+                    Login →
+                </button>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                        id="loginMessage"
+                        class="form-message"
+                ></div>
+
+            </form>
+
+
+            <!-- REGISTER LINK -->
+
+            <p class="auth-footer">
+
+                Don't have a shopkeeper account?
+
+                <a href="register.html">
+                    Register here
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<script src="../../js/auth.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shopkeeper Registration - Local Price Compare</title>
+
+    <link rel="stylesheet" href="../../css/auth.css">
+
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="auth-header">
+
+        <div class="logo">
+            🏪
+            <span>Local Price Compare</span>
+        </div>
+
+        <button class="back-button" id="backButton">
+            ← Back
+        </button>
+
+    </header>
+
+
+    <!-- ================= REGISTER CARD ================= -->
+
+    <main class="auth-main">
+
+        <div class="auth-card">
+
+            <div class="auth-icon">
+                🏪
+            </div>
+
+            <h1>
+                Create Shopkeeper Account
+            </h1>
+
+            <p class="auth-subtitle">
+                Register your local shop and start managing
+                your products and prices.
+            </p>
+
+
+            <!-- ================= FORM ================= -->
+
+            <form id="registerForm">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="name"
+                            placeholder="Enter your name"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter password"
+                            minlength="6"
+                            required
+                    >
+
+                    <small>
+                        Password must contain at least 6 characters.
+                    </small>
+
+                </div>
+
+
+                <!-- STORE NAME -->
+
+                <div class="form-group">
+
+                    <label for="storeName">
+                        Store Name
+                    </label>
+
+                    <input
+                            type="text"
+                            id="storeName"
+                            placeholder="Enter your store name"
+                            required
+                    >
+
+                </div>
+
+
+                <!-- ADDRESS -->
+
+                <div class="form-group">
+
+                    <label for="address">
+                        Store Address
+                    </label>
+
+                    <textarea
+                            id="address"
+                            placeholder="Enter your store address"
+                            rows="3"
+                            required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Enter 10-digit phone number"
+                            maxlength="10"
+                            pattern="[0-9]{10}"
+                    >
+
+                </div>
+
+
+                <!-- ================= STORE LOCATION ================= -->
+
+                <div class="form-group">
+
+                    <label>
+                        Store Location
+                    </label>
+
+                    <p style="margin: 5px 0 10px; font-size: 14px; color: #666;">
+                        Stand at your shop and use your current location.
+                        This helps users find your shop within 5 km.
+                    </p>
+
+                    <button
+                            type="button"
+                            class="primary-btn"
+                            id="locationButton"
+                    >
+                        📍 Use My Current Location
+                    </button>
+
+                    <div
+                            id="locationMessage"
+                            class="form-message"
+                    ></div>
+
+                </div>
+
+
+                <!-- HIDDEN LOCATION VALUES -->
+
+                <input
+                        type="hidden"
+                        id="latitude"
+                        name="latitude"
+                >
+
+                <input
+                        type="hidden"
+                        id="longitude"
+                        name="longitude"
+                >
+
+
+                <!-- REGISTER BUTTON -->
+
+                <button
+                        type="submit"
+                        class="primary-btn"
+                        id="registerButton"
+                >
+                    Create Account →
+                </button>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                        id="registerMessage"
+                        class="form-message"
+                ></div>
+
+            </form>
+
+
+            <!-- LOGIN LINK -->
+
+            <p class="auth-footer">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login here
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="../../js/auth.js"></script>
+
+
+<script>
+
+    // =========================
+    // STORE LOCATION
+    // =========================
+
+    const locationButton =
+        document.getElementById("locationButton");
+
+    const locationMessage =
+        document.getElementById("locationMessage");
+
+    const latitudeInput =
+        document.getElementById("latitude");
+
+    const longitudeInput =
+        document.getElementById("longitude");
+
+
+    locationButton.addEventListener("click", function () {
+
+        if (!navigator.geolocation) {
+
+            locationMessage.textContent =
+                "Location is not supported by your browser.";
+
+            locationMessage.style.color = "red";
+
+            return;
+        }
+
+
+        locationButton.disabled = true;
+
+        locationButton.textContent =
+            "📍 Getting Location...";
+
+
+        locationMessage.textContent =
+            "Please allow location access when your browser asks.";
+
+        locationMessage.style.color = "#555";
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function (position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                latitudeInput.value =
+                    latitude;
+
+                longitudeInput.value =
+                    longitude;
+
+
+                locationMessage.textContent =
+                    "✓ Store location captured successfully.";
+
+                locationMessage.style.color =
+                    "green";
+
+
+                locationButton.disabled = false;
+
+                locationButton.textContent =
+                    "📍 Location Captured";
+
+
+                console.log(
+                    "Store Latitude:",
+                    latitude
+                );
+
+                console.log(
+                    "Store Longitude:",
+                    longitude
+                );
+
+            },
+
+
+            function (error) {
+
+                locationButton.disabled = false;
+
+                locationButton.textContent =
+                    "📍 Use My Current Location";
+
+
+                switch (error.code) {
+
+                    case error.PERMISSION_DENIED:
+
+                        locationMessage.textContent =
+                            "Location permission was denied. Please allow location access.";
+
+                        break;
+
+
+                    case error.POSITION_UNAVAILABLE:
+
+                        locationMessage.textContent =
+                            "Unable to determine your location.";
+
+                        break;
+
+
+                    case error.TIMEOUT:
+
+                        locationMessage.textContent =
+                            "Location request timed out. Please try again.";
+
+                        break;
+
+
+                    default:
+
+                        locationMessage.textContent =
+                            "Unable to get your location.";
+
+                }
+
+
+                locationMessage.style.color =
+                    "red";
+
+            },
+
+
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            }
+
+        );
+
+    });
+
+</script>
+
+</body>
+
+</html>
