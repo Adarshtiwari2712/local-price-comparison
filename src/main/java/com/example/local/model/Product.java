@@ -1,53 +1,50 @@
 package com.example.local.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Entity
-@Table(name = "products")
+@Table(
+        name = "products",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"name", "store_id"})
+        }
+)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false)
+    private LocalStore store;
 
 
-
-
-
-    @OneToMany(mappedBy = "product")
-    private  List<Price> prices = new ArrayList<>();
-
-    private Product() {
+    // Default constructor
+    public Product() {
     }
 
-    public Product(String name) {
+
+    // Constructor
+    public Product(String name, LocalStore store) {
         this.name = name;
+        this.store = store;
     }
+
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
     }
 
-    public List<Price> getPrices() {
-        return prices;
-    }
-
-    public void setPrices(List<Price> prices) {
-        this.prices = prices;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
@@ -58,8 +55,11 @@ public class Product {
     }
 
 
+    public LocalStore getStore() {
+        return store;
+    }
 
-
+    public void setStore(LocalStore store) {
+        this.store = store;
+    }
 }
-
-

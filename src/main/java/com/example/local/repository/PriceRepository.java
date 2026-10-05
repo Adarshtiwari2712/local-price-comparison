@@ -1,19 +1,21 @@
 package com.example.local.repository;
 
 import com.example.local.model.Price;
-import com.example.local.model.Product;
-import com.example.local.model.LocalStore;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.local.model.LocalStore;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PriceRepository  extends JpaRepository<Price, Long>{
-    Optional<Price> findByProductAndStore(Product product, LocalStore store);
-    List<Price> findByStore(LocalStore store);
-    List<Price> findByProduct(Product product);
-    boolean existsByProduct(Product product);
-    boolean existsByStore(LocalStore store);
+public interface PriceRepository extends JpaRepository<Price, Long> {
 
+    List<Price> findByStoreId(Long storeId);
+
+    Optional<Price> findByIdAndStoreId(Long id, Long storeId);
+
+    Optional<Price> findByProductIdAndStoreId(
+            Long productId,
+            Long storeId
+    );
+
+    List<Price> findByProduct_NameIgnoreCase(String name);
 }

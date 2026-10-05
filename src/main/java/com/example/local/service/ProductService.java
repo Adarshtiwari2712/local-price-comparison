@@ -4,7 +4,9 @@ import com.example.local.dto.MyStoreProductResponseDTO;
 import com.example.local.dto.ProductRequestDTO;
 import com.example.local.dto.ProductResponseDTO;
 import com.example.local.dto.UpdateProductRequestDTO;
-import com.example.local.exception.*;
+import com.example.local.exception.ProductAlreadyExistsException;
+import com.example.local.exception.ProductHasPricesException;
+import com.example.local.exception.ProductNotFoundException;
 import com.example.local.model.LocalStore;
 import com.example.local.model.Price;
 import com.example.local.model.Product;
@@ -16,7 +18,6 @@ import com.example.local.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -25,34 +26,93 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final PriceRepository priceRepository;
-    private final UserRepository userRepository;
     private final LocalStoreRepository localStoreRepository;
+    private final UserRepository userRepository;
 
     public ProductService(
             ProductRepository productRepository,
             PriceRepository priceRepository,
-            UserRepository userRepository,
-            LocalStoreRepository localStoreRepository) {
-
+            LocalStoreRepository localStoreRepository,
+            UserRepository userRepository
+    ) {
         this.productRepository = productRepository;
         this.priceRepository = priceRepository;
-        this.userRepository = userRepository;
         this.localStoreRepository = localStoreRepository;
+        this.userRepository = userRepository;
     }
 
-    public ProductResponseDTO addProduct(ProductRequestDTO request) {
+    // -----------------------------------------
+    // Get logged-in shopkeeper
+    // -----------------------------------------
 
-        Product product = new Product(
-                request.getName()
+    private User getLoggedInUser() {
 
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String email = authentication.getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+    }
+
+    // -----------------------------------------
+    // Get logged-in shopkeeper's store
+    // -----------------------------------------
+
+    private LocalStore getMyStore() {
+
+        User user = getLoggedInUser();
+
+        return localStoreRepository.findByOwner(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Store not found"));
+    }
+
+    // -----------------------------------------
+    // Add Product
+    // -----------------------------------------
+
+    public ProductResponseDTO addProduct(
+            ProductRequestDTO request
+    ) {
+
+        LocalStore store = getMyStore();
+
+        String name = request.getName().trim();
+
+        /*
+         * Check only inside THIS shop.
+         *
+         * Therefore:
+         *
+         * Gupta Store -> Milk
+         * Ravi Store  -> Milk
+         *
+         * are allowed.
+         */
+        if (productRepository
+                .findByNameIgnoreCaseAndStoreId(
+                        name,
+                        store.getId()
+                )
+                .isPresent()) {
+
+            throw new ProductAlreadyExistsException(
+                    "Product already exists in your store"
             );
-
-
-        if (productRepository.existsByNameIgnoreCase(product.getName())) {
-            throw new ProductAlreadyExistsException("Product already exists");
         }
 
-        Product savedProduct = productRepository.save(product);
+        Product product = new Product();
+
+        product.setName(name);
+        product.setStore(store);
+
+        Product savedProduct =
+                productRepository.save(product);
 
         return new ProductResponseDTO(
                 savedProduct.getId(),
@@ -60,107 +120,172 @@ public class ProductService {
         );
     }
 
+    // -----------------------------------------
+    // Get all products
+    // -----------------------------------------
+
     public List<ProductResponseDTO> getAllProducts() {
 
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponseDTO(
-                        product.getId(),
-                        product.getName()
-                ))
+                .map(product ->
+                        new ProductResponseDTO(
+                                product.getId(),
+                                product.getName()
+                        )
+                )
                 .toList();
     }
 
-    public ProductResponseDTO searchProduct(String name) {
+    // -----------------------------------------
+    // Search products globally
+    // -----------------------------------------
 
-        Product product = productRepository.findByNameIgnoreCase(name)
-                .orElseThrow(() ->
-                        new ProductNotFoundException("Product not found"));
+    public List<ProductResponseDTO> searchProducts(
+            String name
+    ) {
 
-        return new ProductResponseDTO(
-                product.getId(),
-                product.getName()
-        );
+        return productRepository
+                .findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(product ->
+                        new ProductResponseDTO(
+                                product.getId(),
+                                product.getName()
+                        )
+                )
+                .toList();
     }
 
-    public void deleteProduct(Long productId) {
+    // -----------------------------------------
+    // Get my store products
+    // -----------------------------------------
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() ->
-                        new ProductNotFoundException("Product not found"));
+    public List<MyStoreProductResponseDTO>
+    getMyStoreProducts() {
 
-        if (priceRepository.existsByProduct(product)) {
+        LocalStore store = getMyStore();
+
+        List<Product> products =
+                productRepository.findByStoreId(
+                        store.getId()
+                );
+
+        return products.stream()
+                .map(product -> {
+
+                    Price price =
+                            priceRepository
+                                    .findByProductIdAndStoreId(
+                                            product.getId(),
+                                            store.getId()
+                                    )
+                                    .orElse(null);
+
+                    double amount =
+                            price != null
+                                    ? price.getAmount()
+                                    : 0;
+
+                    boolean available =
+                            price != null &&
+                                    price.isAvailable();
+
+                    return new MyStoreProductResponseDTO(
+                            product.getId(),
+                            product.getName(),
+                            amount,
+                            available
+                    );
+                })
+                .toList();
+    }
+
+    // -----------------------------------------
+    // Update my product
+    // -----------------------------------------
+
+    public Product updateProductName(
+            Long id,
+            UpdateProductRequestDTO request
+    ) {
+
+        LocalStore store = getMyStore();
+
+        Product product =
+                productRepository
+                        .findByIdAndStoreId(
+                                id,
+                                store.getId()
+                        )
+                        .orElseThrow(() ->
+                                new ProductNotFoundException(
+                                        "Product not found in your store"
+                                )
+                        );
+
+        String newName =
+                request.getName().trim();
+
+        /*
+         * Prevent duplicate names
+         * only within the same store.
+         */
+        productRepository
+                .findByNameIgnoreCaseAndStoreId(
+                        newName,
+                        store.getId()
+                )
+                .ifPresent(existing -> {
+
+                    if (!existing.getId().equals(id)) {
+
+                        throw new ProductAlreadyExistsException(
+                                "Product with this name already exists in your store"
+                        );
+                    }
+                });
+
+        product.setName(newName);
+
+        return productRepository.save(product);
+    }
+
+    // -----------------------------------------
+    // Delete my product
+    // -----------------------------------------
+
+    public void deleteProduct(Long id) {
+
+        LocalStore store = getMyStore();
+
+        Product product =
+                productRepository
+                        .findByIdAndStoreId(
+                                id,
+                                store.getId()
+                        )
+                        .orElseThrow(() ->
+                                new ProductNotFoundException(
+                                        "Product not found in your store"
+                                )
+                        );
+
+        /*
+         * Price belongs to this product.
+         */
+        if (priceRepository
+                .findByProductIdAndStoreId(
+                        id,
+                        store.getId()
+                )
+                .isPresent()) {
+
             throw new ProductHasPricesException(
-                    "Cannot delete product because prices exist for it"
+                    "Delete the product price before deleting the product"
             );
         }
 
         productRepository.delete(product);
-    }
-
-    public List<MyStoreProductResponseDTO> getMyStoreProducts() {
-
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        String email = authentication.getName();
-
-        User owner = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new InvalidCredentialsException(
-                                "Shopkeeper not found"
-                        ));
-
-        LocalStore store = localStoreRepository.findByOwner(owner)
-                .orElseThrow(() ->
-                        new StoreNotFoundException(
-                                "Shopkeeper does not have a store"
-                        ));
-
-        List<Price> prices = priceRepository.findByStore(store);
-
-        return prices.stream()
-                .map(price -> new MyStoreProductResponseDTO(
-                        price.getProduct().getName(),
-                        price.getAmount(),
-                        price.isAvailable()
-                ))
-                .toList();
-    }
-
-    public Product updateProductName(Long productId, UpdateProductRequestDTO request){
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(()->
-                        new ProductNotFoundException("Product not found"));
-         Authentication authentication =
-         SecurityContextHolder.getContext().getAuthentication();
-
-         String email = authentication.getName();
-
-        User owner = userRepository.findByEmail(email)
-                .orElseThrow(()->
-                        new InvalidCredentialsException("Shopkeeper not found"));
-
-        LocalStore ownerStore = localStoreRepository.findByOwner(owner)
-                .orElseThrow(()->
-                        new StoreNotFoundException(
-                                "Shopkeeper does not have a store"
-                        ));
-
-        List<Price> prices = priceRepository.findByProduct(product);
-
-        boolean belongsToOwner = prices.stream()
-                .anyMatch(price ->
-                        price.getStore().getId().equals(ownerStore.getId()));
-
-        if(!belongsToOwner){
-            throw new AccessDeniedException(
-                    "You can only update products in your own store"
-            );
-        }
-        product.setName(request.getName());
-        return productRepository.save(product);
-
     }
 }

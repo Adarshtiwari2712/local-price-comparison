@@ -1,51 +1,64 @@
 package com.example.local.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 
 public class UpdateStoreRequestDTO {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank
     private String address;
-    @Pattern(regexp = "^[0-9]{10}$",
-             message = "phone number must contain exactly 10 digits"
-    )
+
     private String phone;
+
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
 
     public UpdateStoreRequestDTO() {
     }
 
-public UpdateStoreRequestDTO(
-        String name, String address, String phone){
-    this.name = name;
-    this.address = address;
-    this.phone = phone;
-}
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getPhone() {
         return phone;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

@@ -5,14 +5,15 @@ import com.example.local.dto.LocalStoreResponseDTO;
 import com.example.local.dto.UpdateStoreRequestDTO;
 import com.example.local.model.LocalStore;
 import com.example.local.service.LocalStoreService;
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import java.util.List;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/stores")
@@ -21,95 +22,97 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
         description = "APIs for managing local stores"
 )
 public class LocalStoreController {
+
     private final LocalStoreService localStoreService;
 
-    public LocalStoreController(LocalStoreService localStoreService){
+    public LocalStoreController(
+            LocalStoreService localStoreService
+    ) {
         this.localStoreService = localStoreService;
-
     }
+
     @Operation(
             summary = "Add a local store",
             description = "Creates a local store for the authenticated shopkeeper"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Store added successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid store data"),
-            @ApiResponse(responseCode = "401", description = "Authentication required"),
-            @ApiResponse(responseCode = "403", description = "Access denied"),
-            @ApiResponse(responseCode = "409", description = "Shopkeeper already has a store")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Store added successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid store data"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Authentication required"
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Shopkeeper already has a store"
+            )
     })
     @PostMapping
     @SecurityRequirement(name = "bearerAuth")
-    public LocalStoreResponseDTO addStore(@Valid @RequestBody LocalStoreRequestDTO request){
+    public LocalStoreResponseDTO addStore(
+            @Valid @RequestBody LocalStoreRequestDTO request
+    ) {
         return localStoreService.addStore(request);
     }
 
     @Operation(
             summary = "Get my store",
-            description = "Returns the belonging to the authenticated shopkeeper"
+            description = "Returns the store belonging to the authenticated shopkeeper"
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Store retrieved successfully"),
-            @ApiResponse(responseCode = "401", description = "Authentication required"),
-            @ApiResponse(responseCode = "404", description = "Shopkeeper does not have a store")
-    })
     @GetMapping("/my-store")
     @SecurityRequirement(name = "bearerAuth")
-    public LocalStoreResponseDTO getMyStore(){
+    public LocalStoreResponseDTO getMyStore() {
         return localStoreService.getMyStore();
     }
+
     @Operation(
-            summary = "Get all local stores",
-            description = "Returns a list of all local stores registered in the system"
+            summary = "Get all local stores"
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Stores retrieved successfully")
-    })
     @GetMapping
-    public List<LocalStoreResponseDTO> getAllStores(){
+    public List<LocalStoreResponseDTO> getAllStores() {
         return localStoreService.getAllStores();
     }
+
     @Operation(
-            summary = "Delete a local store",
-            description = "Deletes a store only if it belongs to the authenticated shopkeeper and has no associated prices"
+            summary = "Delete a local store"
     )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Store deleted successfully"),
-            @ApiResponse(responseCode = "401", description = "Authentication required"),
-            @ApiResponse(responseCode = "403", description = "Access denied or store does not belong to the shopkeeper"),
-            @ApiResponse(responseCode = "404", description = "Store not found"),
-            @ApiResponse(responseCode = "409", description = "Store cannot be deleted because prices exist")
-    })
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "bearerAuth")
-    public String deleteStore(@PathVariable Long id) {
+    public String deleteStore(
+            @PathVariable Long id
+    ) {
+
         localStoreService.deleteStore(id);
+
         return "Store deleted successfully";
     }
-@Operation(
-        summary = "Update my store",
-        description = "Updates the name, address and phone of the authenticated shopkeeper's store"
-)
-@ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Store updated successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid store data"),
-        @ApiResponse(responseCode = "401", description = "Authentication required"),
-        @ApiResponse(responseCode = "403", description = "Access denied"),
-        @ApiResponse(responseCode = "404", description = "Store not found")
-})
+
+    @Operation(
+            summary = "Update my store"
+    )
     @PutMapping("/{id}")
     @SecurityRequirement(name = "bearerAuth")
     public LocalStoreResponseDTO updateStore(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateStoreRequestDTO request ){
-    LocalStore store = localStoreService.updateStore(id, request);
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateStoreRequestDTO request
+    ) {
 
-    return new LocalStoreResponseDTO(
-            store.getId(),
-            store.getName(),
-            store.getAddress(),
-            store.getPhone()
-    );
-}
-}
+        LocalStore store =
+                localStoreService.updateStore(id, request);
 
+        return new LocalStoreResponseDTO(
+                store.getId(),
+                store.getName(),
+                store.getAddress(),
+                store.getPhone(),
+                store.getLatitude(),
+                store.getLongitude()
+        );
+    }
+}
